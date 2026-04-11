@@ -9,6 +9,10 @@ function is_password() {
 	const style = window.getComputedStyle(activeElement);
 	if (style.webkitTextSecurity && style.webkitTextSecurity !== 'none') return true;
 
+	// type heuristic
+	const name = activeElement.getAttribute('type');
+	if (type && /pass(word)?|pwd/i.test(type)) return true;
+
 	// name heuristic
 	const name = activeElement.getAttribute('name');
 	if (name && /pass(word)?|pwd/i.test(name)) return true;
