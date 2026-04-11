@@ -1,18 +1,38 @@
-function is_text() {
+function is_input() {
+	// This function checks if the current element is a valid input
 	const activeElement = document.activeElement;
 	if (!activeElement) return false;
-	
-	const tag = activeElement.tagName.toLowerCase();
 
+	const tag = activeElement.tagName.toLowerCase();
 	if (tag === 'textarea') return true;
 
 	if (tag === 'input') {
 		const type = (activeElement.getAttribute('type') || 'text').toLowerCase();
-		const textTypes = ['text', 'search', 'email', 'url', 'tel', 'password'];
+		const textTypes = ['text', 'search', 'email', 'url', 'tel', 'password']; // Don't want things like radio buttons and checkboxes
 		return textTypes.includes(type);
 	}
-
 	return false;	
+}
+
+function is_password() {
+	const activeElement = document.activeElement;
+	if (!activeElement) return false;
+
+	// direct password input
+	if (activeElement.tagName.toLowerCase() === 'input' && activeElement.type.toLowerCase() === 'password') return true;
+
+	// css masking check
+	const style = window.getComputedStyle(activeElement);
+	if (style.webkitTextSecurity && style.webkitTextSecurity !== 'none') return true;
+
+	// name heuristic
+	const name = activeElement.getAttribute('name');
+	if (name && /pass(word)?|pwd/i.test(name)) return true;
+
+	// autocomplete hint
+	if (activeElement.getAttribute('autocomplete') === 'current-password') return true;
+
+	return false;
 }
 
 async function copyToClipboard(text) {
@@ -27,16 +47,27 @@ async function copyToClipboard(text) {
 
 document.addEventListener('keydown', function(event) {
   // Check if Alt key is pressed along with 'l' (or 'L')
-  if (event.altKey && event.key.toLowerCase() === 'l') {
-
+  if (event.altKey && event.key.toLowerCase() === 'i') {
     event.preventDefault();
-    const is_valid_text = is_text();
-	if (is_valid_text) {
+    const is_valid_input = is_input();
+	if (is_valid_input) {
 		copyToClipboard("T")
 	}
 	else {
 	  copyToClipboard("F")
 	}
   }
+  // Check if Alt key is pressed along with 'p' (or 'P')
+  if (event.altKey && event.key.toLowerCase() === 'p') {
+    event.preventDefault();
+    const is_valid_pass = is_password();
+	if (is_valid_pass) {
+		copyToClipboard("T")
+	}
+	else {
+	  copyToClipboard("F")
+	}
+  }
+
 });
 
