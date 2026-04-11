@@ -10,7 +10,7 @@ function is_password() {
 	if (style.webkitTextSecurity && style.webkitTextSecurity !== 'none') return true;
 
 	// type heuristic
-	const name = activeElement.getAttribute('type');
+	const type = activeElement.getAttribute('type');
 	if (type && /pass(word)?|pwd/i.test(type)) return true;
 
 	// name heuristic
