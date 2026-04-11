@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Input Checker",
-  "description": "Check current input type",
+  "name": "Input Password Checker",
+  "description": "Check if input is password",
   "version": "1.0.0",
 
   "permissions": ["activeTab", "scripting"],
