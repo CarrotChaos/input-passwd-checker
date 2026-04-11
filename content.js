@@ -1,23 +1,7 @@
-function is_input() {
-	// This function checks if the current element is a valid input
-	const activeElement = document.activeElement;
-	if (!activeElement) return false;
-
-	const tag = activeElement.tagName.toLowerCase();
-	if (tag === 'textarea') return true;
-
-	if (tag === 'input') {
-		const type = (activeElement.getAttribute('type') || 'text').toLowerCase();
-		const textTypes = ['text', 'search', 'email', 'url', 'tel', 'password']; // Don't want things like radio buttons and checkboxes
-		return textTypes.includes(type);
-	}
-	return false;	
-}
-
 function is_password() {
 	const activeElement = document.activeElement;
 	if (!activeElement) return false;
-
+	console.log(activeElement)
 	// direct password input
 	if (activeElement.tagName.toLowerCase() === 'input' && activeElement.type.toLowerCase() === 'password') return true;
 
@@ -46,17 +30,6 @@ async function copyToClipboard(text) {
 
 
 document.addEventListener('keydown', function(event) {
-  // Check if Alt key is pressed along with 'l' (or 'L')
-  if (event.altKey && event.key.toLowerCase() === 'i') {
-    event.preventDefault();
-    const is_valid_input = is_input();
-	if (is_valid_input) {
-		copyToClipboard("T")
-	}
-	else {
-	  copyToClipboard("F")
-	}
-  }
   // Check if Alt key is pressed along with 'p' (or 'P')
   if (event.altKey && event.key.toLowerCase() === 'p') {
     event.preventDefault();
