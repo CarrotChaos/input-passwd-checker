@@ -13,6 +13,10 @@ function is_password() {
 	const type = activeElement.getAttribute('type');
 	if (type && /pass(word)?|pwd/i.test(type)) return true;
 
+	// id heuristic
+	const id = activeElement.getAttribute('id');
+	if (id && /pass(word)?|pwd/i.test(id)) return true;
+
 	// name heuristic
 	const name = activeElement.getAttribute('name');
 	if (name && /pass(word)?|pwd/i.test(name)) return true;
@@ -22,6 +26,38 @@ function is_password() {
 
 	return false;
 }
+
+function is_totp_input() {
+	const activeElement = document.activeElement;
+	if (!activeElement) return false;
+
+	const isInputLike =
+		activeElement.tagName.toLowerCase() === 'input' ||
+		activeElement.isContentEditable ||
+		activeElement.getAttribute?.('role') === 'textbox' ||
+		'value' in activeElement;
+
+	if (!isInputLike) return false;
+
+	if (activeElement.getAttribute('autocomplete') === 'one-time-code') return true;
+
+	const inputMode = activeElement.getAttribute('inputmode');
+	const maxLength = activeElement.getAttribute('maxlength');
+	const pattern = activeElement.getAttribute('pattern');
+
+	if (
+		(inputMode === 'numeric' || pattern?.includes('[0-9]')) &&
+		maxLength && Number(maxLength) <= 8
+	) {
+		return true;
+	}
+
+	const name = (activeElement.name || '') + (activeElement.id || '');
+	if (/otp|totp|2fa|code|verify|verification|mfa|authentication|authenticator/i.test(name)) return true;
+
+	return false;
+}
+
 
 async function copyToClipboard(text) {
   try {
@@ -34,7 +70,6 @@ async function copyToClipboard(text) {
 
 
 document.addEventListener('keydown', function(event) {
-  // Check if Alt key is pressed along with 'p' (or 'P')
   if (event.altKey && event.key.toLowerCase() === 'p') {
     event.preventDefault();
     const is_valid_pass = is_password();
@@ -45,6 +80,18 @@ document.addEventListener('keydown', function(event) {
 	  copyToClipboard("F")
 	}
   }
+
+  if (event.altKey && event.key.toLowerCase() === 't') {
+    event.preventDefault();
+    const is_valid_totp = is_totp_input();
+	if (is_valid_totp) {
+		copyToClipboard("T")
+	}
+	else {
+	  copyToClipboard("F")
+	}
+  }
+
 
 });
 
