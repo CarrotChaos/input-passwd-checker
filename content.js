@@ -1,5 +1,14 @@
+function getDeepActiveElement() {
+  let element = document.activeElement;
+  
+  while (element?.shadowRoot?.activeElement) {
+    element = element.shadowRoot.activeElement;
+  }
+  return element;
+}
+
 function isPassword() {
-	const activeElement = document.activeElement;
+	const activeElement = getDeepActiveElement();
 	if (!activeElement) return false;
 
 	console.log(activeElement)
@@ -81,7 +90,7 @@ function isPassword() {
 }
 
 function isTotpInput() {
-	const activeElement = document.activeElement;
+	const activeElement = getDeepActiveElement()
 	if (!activeElement) return false;
 
 	const isInputLike =
@@ -121,7 +130,6 @@ async function copyToClipboard(text) {
   }
 }
 
-
 document.addEventListener('keydown', function(event) {
   if (event.altKey && event.key.toLowerCase() === 'p') {
     event.preventDefault();
@@ -144,5 +152,4 @@ document.addEventListener('keydown', function(event) {
 	  copyToClipboard("F")
 	}
   }
-});
-
+}, true); 
