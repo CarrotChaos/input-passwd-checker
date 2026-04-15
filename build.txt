@@ -1,1 +1,1 @@
-zip -r ../input-checker-extension.xpi manifest.json content.js
+zip -r ../input-passwd-checker.xpi manifest.json content.js
